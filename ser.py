@@ -27,14 +27,6 @@ def privado(sock_conn, mensagem):
     except ValueError:
         sock_conn.sendall("Invalid format. Use 'privado <username> <message>'.".encode())
 
-def recebe_nome(sock_conn):
-    # Receive and return the user's name
-    nome = sock_conn.recv(50).decode().strip()
-    lista_nome.append(nome)
-    lista_conexoes.append(sock_conn)
-    broadcast(f"{nome} has joined the chat!", sock_conn)
-    return nome
-
 def lista_usuarios(sock_conn):
     # List all connected users
     if lista_nome:
@@ -42,9 +34,19 @@ def lista_usuarios(sock_conn):
     else:
         sock_conn.sendall("Nenhum usuário conectado.".encode("utf-8"))
 
+def recebe_nome(sock_conn):
+    # Request the user's name from the client
+    sock_conn.sendall("Please enter your name:".encode())
+    nome = sock_conn.recv(50).decode().strip()
+    lista_nome.append(nome)
+    lista_conexoes.append(sock_conn)
+    broadcast(f"{nome} has joined the chat!", sock_conn)
+    return nome
+
 def recebe_mensagem(sock_conn):
     nome = recebe_nome(sock_conn)
     while True:
+        sock_conn.sendall("Enter a message or type 'usuario' to list users, 'exit' to leave, or 'privado' for private messages:".encode())
         mensagem = sock_conn.recv(1024).decode()
 
         if not mensagem:
