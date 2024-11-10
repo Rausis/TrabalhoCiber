@@ -16,7 +16,7 @@ def broadcast(mensagem, remetente_sock_conn=None):
 
 def privado(sock_conn, mensagem):
     # Attempt to send a private message
-    try:
+
         _, usuario_escolhido, conteudo_mensagem = mensagem.split(" ", 2)
         for i, nome in enumerate(lista_nome):
             if nome == usuario_escolhido:
@@ -24,8 +24,6 @@ def privado(sock_conn, mensagem):
                 break
         else:
             sock_conn.sendall(f"User {usuario_escolhido} not found.".encode())
-    except ValueError:
-        sock_conn.sendall("Invalid format. Use 'privado <username> <message>'.".encode())
 
 def lista_usuarios(sock_conn):
     # List all connected users
@@ -37,7 +35,7 @@ def lista_usuarios(sock_conn):
 def recebe_nome(sock_conn):
     # Request the user's name from the client
     sock_conn.sendall("Please enter your name:".encode())
-    nome = sock_conn.recv(50).decode().strip()
+    nome = sock_conn.recv(50).decode()
     lista_nome.append(nome)
     lista_conexoes.append(sock_conn)
     broadcast(f"{nome} has joined the chat!", sock_conn)
