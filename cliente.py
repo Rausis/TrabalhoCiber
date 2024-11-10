@@ -9,8 +9,8 @@ s.connect((HOST,PORTA))
 #CLIENTE EVVIA UMA MENSAGEM
 s.sendall(str.encode('BES - PUCPR'))
 info = str(input("Texto: "))
-texto = sock.socket
-texto.sendall(str.encode(info))
+
+s.sendall(str.encode(info))
 #cliente le uma mensagem
 dados = s.recv(1024)
 print(f'Servidor >> {dados.decode()}')
