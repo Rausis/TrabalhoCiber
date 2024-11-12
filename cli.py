@@ -1,7 +1,7 @@
 import socket as sock
 import threading
 
-# Function to handle receiving messages from the server
+# Função para lidar com o recebimento de mensagens do servidor
 def receber_mensagens(socket_cliente):
     while True:
         try:
@@ -13,34 +13,31 @@ def receber_mensagens(socket_cliente):
             print("Erro ao receber mensagem do servidor.")
             break
 
-# Function to handle sending user input to the server
+# Função para lidar com o envio de mensagens do usuário para o servidor
 def enviar_mensagens(socket_cliente):
     while True:
-        mensagem = input()  # Get user input
-        socket_cliente.sendall(mensagem.encode())  # Send the message to the server
+        mensagem = input()  # Recebe a mensagem do usuário
+        socket_cliente.sendall(mensagem.encode())  # Envia a mensagem para o servidor
 
-# IP do servidor que queremos nos conectar
-HOST = '127.0.0.1'
+# IP do servidor ao qual queremos nos conectar
+HOST = '26.37.64.17'
 PORTA = 9999
 
-# Create socket connection
+# Cria a conexão do socket
 socket_cliente = sock.socket(sock.AF_INET, sock.SOCK_STREAM)
 socket_cliente.connect((HOST, PORTA))
 
 # Recebe o pedido de nome do servidor
-nome = socket_cliente.recv(1024).decode()  # Server asks for the name
-print(nome)  # Display the prompt from the server
-nome = input()  # Client enters their name
-socket_cliente.sendall(nome.encode())  # Send name to server
+nome = socket_cliente.recv(1024).decode()  # Servidor solicita o nome
+print(nome)  # Exibe a solicitação do servidor
+nome = input()  # Cliente insere seu nome
+socket_cliente.sendall(nome.encode())  # Envia o nome para o servidor
 
-# Create threads for receiving and sending messages
+# Cria threads para receber e enviar mensagens
 thread_receber = threading.Thread(target=receber_mensagens, args=(socket_cliente,))
 thread_enviar = threading.Thread(target=enviar_mensagens, args=(socket_cliente,))
 
-# Start the threads
+# Inicia as threads
 thread_receber.start()
 thread_enviar.start()
 
-# Join threads to wait for completion
-thread_receber.join()
-thread_enviar.join()
